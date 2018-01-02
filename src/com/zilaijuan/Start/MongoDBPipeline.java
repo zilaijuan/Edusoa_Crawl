@@ -5,11 +5,14 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import com.zilaijuan.tools.MongoJDBC;
 
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
+import us.codecraft.webmagic.selector.Json;
 
+@SuppressWarnings("deprecation")
 public class MongoDBPipeline implements Pipeline {
 
 	@Override
@@ -21,6 +24,7 @@ public class MongoDBPipeline implements Pipeline {
 		int priority = (int) resultItems.getRequest().getPriority();
 		String industry_id = "";
 		String str = "";
+		Json js = null;
 		switch (priority) {
 		case 0:
 			str = resultItems.get("IndustryList");
@@ -41,7 +45,9 @@ public class MongoDBPipeline implements Pipeline {
 		}
 		System.out.println(str);
 		DBCollection collection = db.getCollection(tableName);
-		DBObject query = (BasicDBObject) JSON.parse(str);
+		DBObject query = null;
+		query = (BasicDBObject) JSON.parse(str);
+
 		if (priority == 1) {
 			query.put("industry_id", industry_id);
 		}
